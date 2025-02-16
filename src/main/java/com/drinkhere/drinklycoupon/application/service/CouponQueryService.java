@@ -27,10 +27,15 @@ public class CouponQueryService {
     public void handleCouponAvailabilityRequest(CouponAvailabilityRequest request) throws JsonProcessingException {
         boolean isAvailable = couponRepository.existsByIdAndCountGreaterThan(request.getCouponId(), 0);
 
+        // 쿠폰 재고 감소 처리 추가
+        if (isAvailable) {
+            couponRepository.decreaseStock(request.getCouponId());
+        }
+
         // Kafka 토픽에 개수 확인 결과 전송
-        String jsonRequest = objectMapper.writeValueAsString(
+        String jsonResponse = objectMapper.writeValueAsString(
                 new CouponAvailabilityResponse(request.getCouponId(), request.getUserId(), isAvailable)
         );
-        kafkaTemplate.send("coupon-availability-response", jsonRequest);
+        kafkaTemplate.send("coupon-availability-response", jsonResponse);
     }
 }
