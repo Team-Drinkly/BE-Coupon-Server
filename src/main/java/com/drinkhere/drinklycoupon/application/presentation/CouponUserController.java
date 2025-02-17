@@ -9,7 +9,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/coupon/user")
+@RequestMapping("/api/v1/coupon/m")
 public class CouponUserController {
 
     private final KafkaTemplate<String, String> kafkaTemplate;

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/coupon/admin")
+@RequestMapping("/api/v1/coupon/o")
 @RequiredArgsConstructor
 public class CouponAdminController {
 
