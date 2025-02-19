@@ -24,11 +24,11 @@ public class CouponUserController {
 
     @PostMapping("/issue/{couponId}")
     public ApplicationResponse<String> issueCoupon(
-            @RequestHeader("user-id") String userId,
+            @RequestHeader("member-id") String memberId,
             @PathVariable Long couponId) throws JsonProcessingException {
 
         // Kafka 토픽에 쿠폰 발급 요청 메시지 전송
-        String jsonRequest = objectMapper.writeValueAsString(new CouponRequest(Long.valueOf(userId), couponId));
+        String jsonRequest = objectMapper.writeValueAsString(new CouponRequest(Long.valueOf(memberId), couponId));
         kafkaTemplate.send("coupon-issue", jsonRequest);
 
         return ApplicationResponse.ok("쿠폰 발급 요청이 접수되었습니다.");

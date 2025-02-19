@@ -23,6 +23,4 @@ public class CouponAdminController {
         return ApplicationResponse.created(couponCommandService.createCoupon(name, count));
     }
 
-
 }
-
