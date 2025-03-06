@@ -31,6 +31,8 @@ public class CouponUserController {
         String jsonRequest = objectMapper.writeValueAsString(new CouponRequest(Long.valueOf(memberId), couponId));
         kafkaTemplate.send("coupon-issue", jsonRequest);
 
-        return ApplicationResponse.ok("쿠폰 발급 요청이 접수되었습니다.");
+        return ApplicationResponse.ok("쿠폰이 지급되었습니다.");
     }
+
+    // 쿠폰 조회
 }
