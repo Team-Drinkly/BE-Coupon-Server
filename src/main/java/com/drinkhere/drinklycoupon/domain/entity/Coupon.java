@@ -25,7 +25,10 @@ public class Coupon {
     private String description;
 
     @Column(nullable = false)
-    private int count;  // 발급 가능한 총 개수
+    private int count;  // 현재 남은 개수
+
+    @Column(nullable = false)
+    private int initialCount; // 최초 발행 개수
 
     @Column(nullable = false)
     private LocalDateTime expirationDate;  // 유효기간
@@ -35,6 +38,7 @@ public class Coupon {
         this.title = title;
         this.description = description;
         this.count = count;
+        this.initialCount = count; // 초기 발행 개수 저장
         this.expirationDate = expirationDate;
     }
 

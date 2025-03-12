@@ -46,6 +46,7 @@ public class CouponQueryService {
 
     @Transactional(readOnly = true)
     public List<CouponDto> getAllCoupons() {
+
         return couponRepository.findAll()
                 .stream()
                 .map(CouponDto::new)

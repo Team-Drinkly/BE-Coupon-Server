@@ -21,7 +21,7 @@ public class CouponDto {
         this.title = coupon.getTitle();
         this.description = coupon.getDescription();
         this.expirationDate = coupon.getExpirationDate().format(FORMATTER);
-        this.remainingCount = coupon.getCount();
+        this.remainingCount = coupon.isExpired() ? (coupon.getInitialCount() - coupon.getCount()) : coupon.getCount();
         this.isAvailable = coupon.isAvailable();
     }
 }
