@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 @Getter
 public class CouponDto {
+
     private final Long id;
     private final String title;
     private final String description;

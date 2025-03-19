@@ -16,7 +16,7 @@ public class CouponCommandService {
     @Transactional
     public Long createCoupon(CreateCouponRequestDto requestDto) {
         Coupon coupon = new Coupon(
-                requestDto.getName(),
+                requestDto.getStoreId(),
                 requestDto.getTitle(),
                 requestDto.getDescription(),
                 requestDto.getCount(),

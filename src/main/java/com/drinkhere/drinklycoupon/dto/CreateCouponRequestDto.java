@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 @Getter
 public class CreateCouponRequestDto {
 
-    private String name;
+    private Long storeId;
     private String title;
     private String description;
     private int count;

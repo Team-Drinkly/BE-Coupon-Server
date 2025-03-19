@@ -18,19 +18,21 @@ public class CouponAdminController {
     private final CouponCommandService couponCommandService;
     private final CouponQueryService couponQueryService;
 
+    // 쿠폰 발행
     @PostMapping("/create")
     public ApplicationResponse<Long> createCoupon(@RequestBody CreateCouponRequestDto requestDto) {
         return ApplicationResponse.created(couponCommandService.createCoupon(requestDto));
     }
 
+    // 쿠폰 리스트
     @GetMapping("/list")
     public ApplicationResponse<List<CouponDto>> getAllCoupons() {
         return ApplicationResponse.ok(couponQueryService.getAllCoupons());
     }
 
+    // 개수 세기
     @GetMapping("/count")
     public ApplicationResponse<Long> getAvailableCouponCount() {
         return ApplicationResponse.ok(couponQueryService.countAvailableCoupons());
     }
-
 }

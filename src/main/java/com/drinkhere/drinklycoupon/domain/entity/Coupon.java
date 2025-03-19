@@ -15,8 +15,8 @@ public class Coupon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String name;
+    @Column(nullable = false)
+    private Long storeId;
 
     @Column(nullable = false)
     private String title;
@@ -33,8 +33,8 @@ public class Coupon {
     @Column(nullable = false)
     private LocalDateTime expirationDate;  // 유효기간
 
-    public Coupon(String name, String title, String description, int count, LocalDateTime expirationDate) {
-        this.name = name;
+    public Coupon(Long storeId, String title, String description, int count, LocalDateTime expirationDate) {
+        this.storeId = storeId;
         this.title = title;
         this.description = description;
         this.count = count;
