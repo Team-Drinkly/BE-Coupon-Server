@@ -1,12 +1,12 @@
 package com.drinkhere.drinklycoupon.application.service;
 
 import com.drinkhere.drinklycoupon.domain.entity.Coupon;
+import com.drinkhere.drinklycoupon.domain.entity.IssuedCoupon;
 import com.drinkhere.drinklycoupon.domain.repository.CouponRepository;
+import com.drinkhere.drinklycoupon.domain.repository.IssuedCouponRepository;
 import com.drinkhere.drinklycoupon.dto.CouponAvailabilityRequest;
-import com.drinkhere.drinklycoupon.dto.CouponAvailabilityResponse;
 import com.drinkhere.drinklycoupon.dto.CouponDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class CouponQueryService {
 
     private final CouponRepository couponRepository;
-    private final ObjectMapper objectMapper;
+    private final IssuedCouponRepository issuedCouponRepository;
 
     @Qualifier("couponAvailabilityKafkaTemplate")
     @Autowired
@@ -37,11 +37,9 @@ public class CouponQueryService {
             couponRepository.decreaseStock(request.getCouponId());
         }
 
-        // Kafka 토픽에 개수 확인 결과 전송
-        String jsonResponse = objectMapper.writeValueAsString(
-                new CouponAvailabilityResponse(request.getCouponId(), request.getUserId(), isAvailable)
-        );
-        kafkaTemplate.send("coupon-availability-response", jsonResponse);
+        // 발행 개인 기록 저장
+        IssuedCoupon issuedCoupon = new IssuedCoupon(request.getUserId(), request.getCouponId());
+        issuedCouponRepository.save(issuedCoupon);
     }
 
     @Transactional(readOnly = true)
