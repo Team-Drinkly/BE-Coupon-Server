@@ -20,6 +20,7 @@ public class CouponUserController {
     public ApplicationResponse<String> issueCoupon(
             @RequestHeader("member-id") String memberId,
             @PathVariable Long couponId) {
+
         couponService.issueCoupon(Long.valueOf(memberId), couponId);
         return ApplicationResponse.ok("쿠폰이 지급되었습니다.");
     }
@@ -29,21 +30,24 @@ public class CouponUserController {
     public ApplicationResponse<String> useCoupon(
             @RequestHeader("member-id") String memberId,
             @PathVariable Long couponId) {
+
         couponService.useCoupon(Long.valueOf(memberId), couponId);
         return ApplicationResponse.ok("쿠폰 사용 완료");
     }
 
     // 사용 가능한 쿠폰 조회
-    @GetMapping("/coupons/available")
+    @GetMapping("/available")
     public ApplicationResponse<List<NormalCouponDto>> getAvailableCoupons(
             @RequestHeader("member-id") String memberId) {
+
         return ApplicationResponse.ok(couponService.getAvailableCoupons(Long.valueOf(memberId)));
     }
 
     // 사용 완료된 쿠폰 조회
-    @GetMapping("/coupons/used")
+    @GetMapping("/used")
     public ApplicationResponse<List<NormalCouponDto>> getUsedCoupons(
             @RequestHeader("member-id") String memberId) {
+
         return ApplicationResponse.ok(couponService.getUsedCoupons(Long.valueOf(memberId)));
     }
 
@@ -51,6 +55,7 @@ public class CouponUserController {
     @GetMapping("/store/{storeId}")
     public ApplicationResponse<List<NormalCouponDto>> getStoreActiveCoupons(
             @PathVariable Long storeId) {
+
         return ApplicationResponse.ok(couponService.getActiveCouponsByStore(storeId));
     }
 }

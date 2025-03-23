@@ -11,24 +11,33 @@ import com.drinkhere.drinklycoupon.dto.CouponStatus;
 import com.drinkhere.drinklycoupon.dto.NormalCouponDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class NormalCouponService {
 
     private final CouponRepository couponRepository;
     private final IssuedCouponRepository issuedCouponRepository;
-
-    @Qualifier("couponRequestKafkaTemplate")
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
+
+    public NormalCouponService(
+            CouponRepository couponRepository,
+            IssuedCouponRepository issuedCouponRepository,
+            @Qualifier("couponRequestKafkaTemplate") KafkaTemplate<String, String> kafkaTemplate,
+            ObjectMapper objectMapper
+    ) {
+        this.couponRepository = couponRepository;
+        this.issuedCouponRepository = issuedCouponRepository;
+        this.kafkaTemplate = kafkaTemplate;
+        this.objectMapper = objectMapper;
+    }
 
     public void issueCoupon(Long memberId, Long couponId) {
         // 중복 발급 방지
@@ -45,14 +54,18 @@ public class NormalCouponService {
         }
     }
 
+    @Transactional
     public void useCoupon(Long memberId, Long couponId) {
+
         IssuedCoupon coupon = issuedCouponRepository.findByMemberIdAndCouponIdAndStatus(memberId, couponId, CouponStatus.AVAILABLE)
                 .orElseThrow(() -> new CouponException(CouponErrorCode.COUPON_NOT_FOUND));
 
-        coupon.use(); // 내부에서 상태 체크
+        coupon.use();
     }
 
+    @Transactional(readOnly = true)
     public List<NormalCouponDto> getAvailableCoupons(Long memberId) {
+
         return issuedCouponRepository.findByMemberIdAndStatus(memberId, CouponStatus.AVAILABLE)
                 .stream()
                 .map(ic -> {
@@ -60,10 +73,12 @@ public class NormalCouponService {
                             .orElseThrow(() -> new CouponException(CouponErrorCode.COUPON_NOT_FOUND));
                     return new NormalCouponDto(coupon, ic);
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<NormalCouponDto> getUsedCoupons(Long memberId) {
+
         return issuedCouponRepository.findByMemberIdAndStatus(memberId, CouponStatus.USED)
                 .stream()
                 .map(ic -> {
@@ -71,9 +86,10 @@ public class NormalCouponService {
                             .orElseThrow(() -> new CouponException(CouponErrorCode.COUPON_NOT_FOUND));
                     return new NormalCouponDto(coupon, ic);
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<NormalCouponDto> getActiveCouponsByStore(Long storeId) {
         return couponRepository.findByStoreId(storeId).stream()
                 .filter(Coupon::isAvailable)
