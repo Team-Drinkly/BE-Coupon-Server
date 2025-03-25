@@ -68,7 +68,7 @@ tasks.named('test') {
 }
 
 bootJar {
-    archivesBaseName = 'couponService'
-    archiveFileName = 'couponService.jar'
+    archivesBaseName = 'coupon-service'
+    archiveFileName = 'coupon-service.jar'
     archiveVersion = "0.0.1"
 }

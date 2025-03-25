@@ -6,6 +6,7 @@ import com.drinkhere.drinklycoupon.domain.repository.CouponRepository;
 import com.drinkhere.drinklycoupon.domain.repository.IssuedCouponRepository;
 import com.drinkhere.drinklycoupon.dto.CouponAvailabilityRequest;
 import com.drinkhere.drinklycoupon.dto.CouponDto;
+import com.drinkhere.drinklycoupon.dto.CouponOwnerDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +44,11 @@ public class CouponQueryService {
     }
 
     @Transactional(readOnly = true)
-    public List<CouponDto> getAllCoupons() {
+    public List<CouponOwnerDto> getAllCoupons() {
 
         return couponRepository.findAll()
                 .stream()
-                .map(CouponDto::new)
+                .map(CouponOwnerDto::new)
                 .collect(Collectors.toList());
     }
 

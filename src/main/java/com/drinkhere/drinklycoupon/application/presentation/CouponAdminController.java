@@ -4,6 +4,7 @@ import com.drinkhere.drinklycoupon.application.service.CouponCommandService;
 import com.drinkhere.drinklycoupon.application.service.CouponQueryService;
 import com.drinkhere.drinklycoupon.common.response.ApplicationResponse;
 import com.drinkhere.drinklycoupon.dto.CouponDto;
+import com.drinkhere.drinklycoupon.dto.CouponOwnerDto;
 import com.drinkhere.drinklycoupon.dto.CreateCouponRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class CouponAdminController {
 
     // 쿠폰 리스트
     @GetMapping("/list")
-    public ApplicationResponse<List<CouponDto>> getAllCoupons() {
+    public ApplicationResponse<List<CouponOwnerDto>> getAllCoupons() {
         return ApplicationResponse.ok(couponQueryService.getAllCoupons());
     }
 
