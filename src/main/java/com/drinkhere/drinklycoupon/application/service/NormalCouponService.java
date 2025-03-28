@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class NormalCouponService {
@@ -90,10 +89,24 @@ public class NormalCouponService {
     }
 
     @Transactional(readOnly = true)
-    public List<NormalCouponDto> getActiveCouponsByStore(Long storeId) {
-        return couponRepository.findByStoreId(storeId).stream()
+    public List<NormalCouponDto> getActiveCouponsByStore(Long storeId, Long memberId) {
+        List<Coupon> coupons = couponRepository.findByStoreId(storeId).stream()
                 .filter(Coupon::isAvailable)
-                .map(coupon -> new NormalCouponDto(coupon, new IssuedCoupon(null, coupon.getId()))) // 가상의 IssuedCoupon 객체
-                .collect(Collectors.toList());
+                .toList();
+
+        return coupons.stream()
+                .map(coupon -> {
+                    // 해당 사용자의 발급 쿠폰 조회
+                    IssuedCoupon issued = issuedCouponRepository.findByMemberIdAndCouponId(memberId, coupon.getId()).orElse(null);
+
+                    if (issued != null) {
+                        return new NormalCouponDto(coupon, issued); // 실제 상태 반환
+                    } else {
+                        // 가상의 IssuedCoupon으로 상태 NONE 설정
+                        IssuedCoupon fakeIssued = new IssuedCoupon(memberId, coupon.getId(), CouponStatus.NONE);
+                        return new NormalCouponDto(coupon, fakeIssued);
+                    }
+                })
+                .toList();
     }
 }

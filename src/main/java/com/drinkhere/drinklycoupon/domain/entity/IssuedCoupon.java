@@ -31,6 +31,12 @@ public class IssuedCoupon {
         this.issuedAt = LocalDateTime.now();
     }
 
+    public IssuedCoupon(Long memberId, Long couponId, CouponStatus status) {
+        this.memberId = memberId;
+        this.couponId = couponId;
+        this.status = status;
+    }
+
     public void use() {
         if (this.status != CouponStatus.AVAILABLE) {
             throw new IllegalStateException("이미 사용된 쿠폰입니다.");

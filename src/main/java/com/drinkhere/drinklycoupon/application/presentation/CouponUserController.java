@@ -54,8 +54,10 @@ public class CouponUserController {
     // 특정 가게의 진행중인 쿠폰 조회
     @GetMapping("/store/{storeId}")
     public ApplicationResponse<List<NormalCouponDto>> getStoreActiveCoupons(
-            @PathVariable Long storeId) {
+            @PathVariable Long storeId,
+            @RequestHeader("member-id") String memberId) {
 
-        return ApplicationResponse.ok(couponService.getActiveCouponsByStore(storeId));
+        return ApplicationResponse.ok(couponService.getActiveCouponsByStore(storeId, Long.valueOf(memberId)));
     }
+
 }
