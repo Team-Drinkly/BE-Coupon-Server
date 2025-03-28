@@ -1,4 +1,4 @@
-name: CI/CD with Git Actions & Docker Hub test
+name: CI/CD with Git Actions & Docker Hub test1
 
 on:
   push:
